@@ -39,7 +39,7 @@ rm(temp.party, temp.party.full)
 # Základní graf --------------------------------------------------------------------
 
 ggplot(d[party != "person"], aes(x = lastX, y = lastY, group = party, col = party)) +
-  geom_jitter(alpha = 0.1, size = 1) +
+  geom_jitter(alpha = 0.1, size = 1, shape = 16) +
   facet_wrap(~ party.full, ncol = 5) +
   scale_x_continuous("", breaks = c(2, 50, 96), labels = c("Levice", "", "Pravice")) +
   scale_y_continuous("", breaks = c(2, 50, 96), labels = c("Liberální", "", "Konzervativní")) +
@@ -53,4 +53,4 @@ ggplot(d[party != "person"], aes(x = lastX, y = lastY, group = party, col = part
   )
 
 ggsave("Graf 1 - základní.png", width = 15, height = 9, dpi = 100)
-# ggsave("Graf 1 - základní, menší.png", width = 13, height = 7, dpi = 85)
+ggsave("Graf 1 - základní, menší.png", width = 13, height = 7, dpi = 85)
