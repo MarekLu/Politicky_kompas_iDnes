@@ -43,11 +43,11 @@ d[, firstY := abs(firstY - 100)]
 
 # Základní graf --------------------------------------------------------------------
 
-g1 <- ggplot(d[party != "person" & lastX != "-1" & lastY != -1], aes(x = lastX, y = lastY, group = party, col = party)) +
+g1 <- ggplot(d, aes(x = lastX, y = lastY, group = party, col = party)) +
   geom_jitter(alpha = 0.1, size = 1, shape = 16) +
   facet_wrap(~ party.full, ncol = 5) +
-  scale_x_continuous("", limits = c(0, 100), breaks = c(2, 96), labels = c("Levice", "Pravice")) +
-  scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Konzervativní", "Liberální")) +
+  scale_x_continuous("", breaks = c(2, 96), labels = c("Levice", "Pravice")) +
+  scale_y_continuous("", breaks = c(0, 100), labels = c("Konzervativní", "Liberální")) +
   ggtitle(paste0("\nPolitický kompas iDnes: ", length(unique(d$iduser)), " respondentů")) +
   theme_bw() +
   theme(
@@ -64,10 +64,10 @@ ggsave("Graf 1 - základní.png", plot = g1, width = 16, height = 7.5, dpi = 100
 # Graf průměr a směrodatná odchylka -----------------------------------------------
 
 t2 <- copy(d)
-t2 <- t2[party != "person", .(mean.x = mean(lastX),
-                              mean.y = mean(lastY),
-                              sd.x = sd(lastX),
-                              sd.y = sd(lastY)), by = party.full]
+t2 <- t2[, .(mean.x = mean(lastX),
+             mean.y = mean(lastY),
+             sd.x = sd(lastX),
+             sd.y = sd(lastY)), by = party.full]
 
 g2 <- ggplot(t2, aes(group = party.full, col = party.full, fill = party.full)) +
   geom_rect(aes(xmin = mean.x - sd.x / 2,
@@ -95,10 +95,10 @@ ggsave("Graf 2 - průměr, standardní odchylka.png", plot = g2, width = 16, hei
 # Graf medián a Median absolute deviation -----------------------------------------------
 
 t3 <- copy(d)
-t3 <- t3[party != "person", .(median.x = median(as.numeric(lastX)),
-                              median.y = median(as.numeric(lastY)),
-                              mad.x = mad(lastX),
-                              mad.y = mad(lastY)), by = party.full]
+t3 <- t3[, .(median.x = median(as.numeric(lastX)),
+             median.y = median(as.numeric(lastY)),
+             mad.x = mad(lastX),
+             mad.y = mad(lastY)), by = party.full]
 
 g3 <- ggplot(t3, aes(group = party.full, col = party.full, fill = party.full)) +
   geom_rect(aes(xmin = median.x - mad.x / 2,
