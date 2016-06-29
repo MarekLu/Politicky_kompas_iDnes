@@ -38,11 +38,11 @@ rm(temp.party, temp.party.full)
 
 # Základní graf --------------------------------------------------------------------
 
-ggplot(d[party != "person"], aes(x = lastX, y = lastY, group = party, col = party)) +
+g1 <- ggplot(d[party != "person"], aes(x = lastX, y = lastY, group = party, col = party)) +
   geom_jitter(alpha = 0.1, size = 1, shape = 16) +
   facet_wrap(~ party.full, ncol = 5) +
-  scale_x_continuous("", breaks = c(2, 50, 96), labels = c("Levice", "", "Pravice")) +
-  scale_y_continuous("", breaks = c(2, 50, 96), labels = c("Liberální", "", "Konzervativní")) +
+  scale_x_continuous("", limits = c(0, 100), breaks = c(2, 96), labels = c("Levice", "Pravice")) +
+  scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Liberální", "Konzervativní")) +
   ggtitle(paste0("\nPolitický kompas iDnes: ", length(unique(d$iduser)), " respondentů")) +
   theme_bw() +
   theme(
@@ -52,5 +52,94 @@ ggplot(d[party != "person"], aes(x = lastX, y = lastY, group = party, col = part
     panel.grid = element_blank()
   )
 
-ggsave("Graf 1 - základní.png", width = 15, height = 9, dpi = 100)
-ggsave("Graf 1 - základní, menší.png", width = 13, height = 7, dpi = 85)
+ggsave("Graf 1 - základní.png", plot = g1, width = 16, height = 7.5, dpi = 100)
+# ggsave("Graf 1 - základní, menší.png", plot = g1, width = 13, height = 5.8, dpi = 85)
+
+
+# Graf průměr a směrodatná odchylka -----------------------------------------------
+
+t2 <- copy(d)
+t2 <- t2[party != "person", .(mean.x = mean(lastX),
+                              mean.y = mean(lastY),
+                              sd.x = sd(lastX),
+                              sd.y = sd(lastY)), by = party.full]
+
+g2 <- ggplot(t2, aes(group = party.full, col = party.full, fill = party.full)) +
+  geom_rect(aes(xmin = mean.x - sd.x / 2,
+                xmax = mean.x + sd.x / 2,
+                ymin = mean.y - sd.y / 2,
+                ymax = mean.y + sd.y / 2),
+            alpha = 0.3, color = NA) +
+  geom_point(aes(x = mean.x, y = mean.y), size = 3, shape = 16) +
+  facet_wrap(~ party.full, ncol = 5) +
+  scale_x_continuous("", limits = c(0, 100), breaks = c(2, 96), labels = c("Levice", "Pravice")) +
+  scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Liberální", "Konzervativní")) +
+  ggtitle(paste0("\nPolitický kompas iDnes, průměr a směrodatná odchylka: ", length(unique(d$iduser)), " respondentů")) +
+  theme_bw() +
+  theme(
+    axis.ticks = element_blank(),
+    legend.position = "none",
+    plot.title = element_text(size = 18, hjust = 0),
+    panel.grid = element_blank()
+  )
+
+ggsave("Graf 2 - průměr, standardní odchylka.png", plot = g2, width = 16, height = 7.5, dpi = 100)
+# ggsave("Graf 2 - průměr, standardní odchylka, menší.png", plot = g2, width = 13, height = 5.8, dpi = 85)
+
+
+# Graf medián a Median absolute deviation -----------------------------------------------
+
+t3 <- copy(d)
+t3 <- t3[party != "person", .(median.x = median(lastX),
+                              median.y = median(lastY),
+                              mad.x = mad(lastX),
+                              mad.y = mad(lastY)), by = party.full]
+
+g3 <- ggplot(t3, aes(group = party.full, col = party.full, fill = party.full)) +
+  geom_rect(aes(xmin = median.x - mad.x / 2,
+                xmax = median.x + mad.x / 2,
+                ymin = median.y - mad.y / 2,
+                ymax = median.y + mad.y / 2),
+            alpha = 0.3, color = NA) +
+  geom_point(aes(x = median.x, y = median.y), size = 3, shape = 16) +
+  facet_wrap(~ party.full, ncol = 5) +
+  scale_x_continuous("", limits = c(0, 100), breaks = c(2, 96), labels = c("Levice", "Pravice")) +
+  scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Liberální", "Konzervativní")) +
+  ggtitle(paste0("\nPolitický kompas iDnes, medián a median absolute deviation: ", length(unique(d$iduser)), " respondentů")) +
+  theme_bw() +
+  theme(
+    axis.ticks = element_blank(),
+    legend.position = "none",
+    plot.title = element_text(size = 18, hjust = 0),
+    panel.grid = element_blank()
+  )
+
+ggsave("Graf 3 - medián, MAD.png", plot = g3, width = 16, height = 7.5, dpi = 100)
+# ggsave("Graf 3 - medián, MAD, menší.png", plot = g3, width = 13, height = 5.8, dpi = 85)
+
+
+# Společný graf medián a Median absolute deviation -----------------------------------------------
+
+g4 <- ggplot(t3, aes(group = party.full, col = party.full, fill = party.full, label = party.full)) +
+  geom_rect(aes(xmin = median.x - mad.x / 2,
+                xmax = median.x + mad.x / 2,
+                ymin = median.y - mad.y / 2,
+                ymax = median.y + mad.y / 2),
+            alpha = 0.3, color = NA) +
+  geom_text(aes(x = median.x, y = median.y), fontface = "bold") +
+  scale_x_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Levice", "Pravice")) +
+  scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Liberální", "Konzervativní")) +
+  ggtitle(paste0("\nPolitický kompas iDnes, medián a median absolute deviation: ", length(unique(d$iduser)), " respondentů")) +
+  theme_bw() +
+  theme(
+    axis.ticks = element_blank(),
+    legend.position = "none",
+    plot.title = element_text(size = 18, hjust = 0),
+    panel.grid = element_blank()
+  )
+
+ggsave("Graf 4 - medián, MAD, společný.png", plot = g4, width = 11, height = 9, dpi = 100)
+# ggsave("Graf 4 - medián, MAD, společný, menší.png", plot = g4, width = 11, height = 9, dpi = 85)
+
+rm(g1, g2, g3, g4)
+
