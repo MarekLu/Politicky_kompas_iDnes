@@ -35,14 +35,19 @@ temp.party.full <- c("Ano", "ČSSD", "KDU-ČSL", "KSČM", "ODS", "person", "Pir�
 d[, party.full := mgsub(temp.party, temp.party.full, party)]
 rm(temp.party, temp.party.full)
 
+d <- d[party != "person" & lastX != "-1" & lastY != "-1" & firstX != "-1" & firstY != "-1"]
+# převrácení osy Y, aby byla stejná jako v grafu na iDnes
+d[, lastY := abs(lastY - 100)]  
+d[, firstY := abs(firstY - 100)]
+
 
 # Základní graf --------------------------------------------------------------------
 
-g1 <- ggplot(d[party != "person"], aes(x = lastX, y = lastY, group = party, col = party)) +
+g1 <- ggplot(d[party != "person" & lastX != "-1" & lastY != -1], aes(x = lastX, y = lastY, group = party, col = party)) +
   geom_jitter(alpha = 0.1, size = 1, shape = 16) +
   facet_wrap(~ party.full, ncol = 5) +
   scale_x_continuous("", limits = c(0, 100), breaks = c(2, 96), labels = c("Levice", "Pravice")) +
-  scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Liberální", "Konzervativní")) +
+  scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Konzervativní", "Liberální")) +
   ggtitle(paste0("\nPolitický kompas iDnes: ", length(unique(d$iduser)), " respondentů")) +
   theme_bw() +
   theme(
@@ -73,7 +78,7 @@ g2 <- ggplot(t2, aes(group = party.full, col = party.full, fill = party.full)) +
   geom_point(aes(x = mean.x, y = mean.y), size = 3, shape = 16) +
   facet_wrap(~ party.full, ncol = 5) +
   scale_x_continuous("", limits = c(0, 100), breaks = c(2, 96), labels = c("Levice", "Pravice")) +
-  scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Liberální", "Konzervativní")) +
+  scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Konzervativní", "Liberální")) +
   ggtitle(paste0("\nPolitický kompas iDnes, průměr a směrodatná odchylka: ", length(unique(d$iduser)), " respondentů")) +
   theme_bw() +
   theme(
@@ -90,8 +95,8 @@ ggsave("Graf 2 - průměr, standardní odchylka.png", plot = g2, width = 16, hei
 # Graf medián a Median absolute deviation -----------------------------------------------
 
 t3 <- copy(d)
-t3 <- t3[party != "person", .(median.x = median(lastX),
-                              median.y = median(lastY),
+t3 <- t3[party != "person", .(median.x = median(as.numeric(lastX)),
+                              median.y = median(as.numeric(lastY)),
                               mad.x = mad(lastX),
                               mad.y = mad(lastY)), by = party.full]
 
@@ -104,7 +109,7 @@ g3 <- ggplot(t3, aes(group = party.full, col = party.full, fill = party.full)) +
   geom_point(aes(x = median.x, y = median.y), size = 3, shape = 16) +
   facet_wrap(~ party.full, ncol = 5) +
   scale_x_continuous("", limits = c(0, 100), breaks = c(2, 96), labels = c("Levice", "Pravice")) +
-  scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Liberální", "Konzervativní")) +
+  scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Konzervativní", "Liberální")) +
   ggtitle(paste0("\nPolitický kompas iDnes, medián a median absolute deviation: ", length(unique(d$iduser)), " respondentů")) +
   theme_bw() +
   theme(
@@ -128,7 +133,7 @@ g4 <- ggplot(t3, aes(group = party.full, col = party.full, fill = party.full, la
             alpha = 0.3, color = NA) +
   geom_text(aes(x = median.x, y = median.y), fontface = "bold") +
   scale_x_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Levice", "Pravice")) +
-  scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Liberální", "Konzervativní")) +
+  scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Konzervativní", "Liberální")) +
   ggtitle(paste0("\nPolitický kompas iDnes, medián a median absolute deviation: ", length(unique(d$iduser)), " respondentů")) +
   theme_bw() +
   theme(
