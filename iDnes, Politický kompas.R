@@ -71,7 +71,7 @@ g1 <- ggplot(d, aes(x = lastX, y = lastY, group = party, col = party)) +
   )
 
 ggsave("Graf 1 - základní.png", plot = g1, width = 16, height = 7.5, dpi = 100)
-# ggsave("Graf 1 - základní, menší.png", plot = g1, width = 13, height = 5.8, dpi = 85)
+ggsave("Graf 1 - základní, menší.png", plot = g1, width = 13, height = 5.8, dpi = 85)
 
 
 # Graf průměr a směrodatná odchylka -----------------------------------------------
@@ -87,7 +87,7 @@ g2 <- ggplot(t2, aes(group = party.full, col = party.full, fill = party.full)) +
                 xmax = mean.x + sd.x / 2,
                 ymin = mean.y - sd.y / 2,
                 ymax = mean.y + sd.y / 2),
-            alpha = 0.3, color = NA) +
+            alpha = 0.2, color = NA) +
   geom_point(aes(x = mean.x, y = mean.y), size = 3, shape = 16) +
   facet_wrap(~ party.full, ncol = 5) +
   scale_x_continuous("", limits = c(0, 100), breaks = c(2, 96), labels = c("Levice", "Pravice")) +
@@ -102,7 +102,7 @@ g2 <- ggplot(t2, aes(group = party.full, col = party.full, fill = party.full)) +
   )
 
 ggsave("Graf 2 - průměr, standardní odchylka.png", plot = g2, width = 16, height = 7.5, dpi = 100)
-# ggsave("Graf 2 - průměr, standardní odchylka, menší.png", plot = g2, width = 13, height = 5.8, dpi = 85)
+ggsave("Graf 2 - průměr, standardní odchylka, menší.png", plot = g2, width = 13, height = 5.8, dpi = 85)
 
 
 # Graf medián a Median absolute deviation -----------------------------------------------
@@ -118,7 +118,7 @@ g3 <- ggplot(t3, aes(group = party.full, col = party.full, fill = party.full)) +
                 xmax = median.x + mad.x / 2,
                 ymin = median.y - mad.y / 2,
                 ymax = median.y + mad.y / 2),
-            alpha = 0.3, color = NA) +
+            alpha = 0.2, color = NA) +
   geom_point(aes(x = median.x, y = median.y), size = 3, shape = 16) +
   facet_wrap(~ party.full, ncol = 5) +
   scale_x_continuous("", limits = c(0, 100), breaks = c(2, 96), labels = c("Levice", "Pravice")) +
@@ -133,7 +133,7 @@ g3 <- ggplot(t3, aes(group = party.full, col = party.full, fill = party.full)) +
   )
 
 ggsave("Graf 3 - medián, MAD.png", plot = g3, width = 16, height = 7.5, dpi = 100)
-# ggsave("Graf 3 - medián, MAD, menší.png", plot = g3, width = 13, height = 5.8, dpi = 85)
+ggsave("Graf 3 - medián, MAD, menší.png", plot = g3, width = 13, height = 5.8, dpi = 85)
 
 
 # Společný graf medián a Median absolute deviation -----------------------------------------------
@@ -143,7 +143,7 @@ g4 <- ggplot(t3, aes(group = party.full, col = party.full, fill = party.full, la
                 xmax = median.x + mad.x / 2,
                 ymin = median.y - mad.y / 2,
                 ymax = median.y + mad.y / 2),
-            alpha = 0.3, color = NA) +
+            alpha = 0.2, color = NA) +
   geom_text(aes(x = median.x, y = median.y), fontface = "bold") +
   scale_x_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Levice", "Pravice")) +
   scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Konzervativní", "Liberální")) +
@@ -157,12 +157,12 @@ g4 <- ggplot(t3, aes(group = party.full, col = party.full, fill = party.full, la
   )
 
 ggsave("Graf 4 - medián, MAD, společný.png", plot = g4, width = 11, height = 9, dpi = 100)
-# ggsave("Graf 4 - medián, MAD, společný, menší.png", plot = g4, width = 11, height = 9, dpi = 85)
+ggsave("Graf 4 - medián, MAD, společný, menší.png", plot = g4, width = 11, height = 9, dpi = 85)
 
 
 # Graf medián a Median absolute deviation, voliči strany a ostatní -----------------------------------------------
 
-t5 <- copy(d)
+t5 <- copy(d[voter != "0"])  # bez těch, kteří nevybrali, koho volili
 t5 <- t5[, .(median.x = median(as.numeric(lastX)),
              median.y = median(as.numeric(lastY)),
              mad.x = mad(lastX),
@@ -176,7 +176,7 @@ g5 <- ggplot(t5, aes(group = party.full, col = is.voter, fill = is.voter)) +
                 xmax = median.x + mad.x / 2,
                 ymin = median.y - mad.y / 2,
                 ymax = median.y + mad.y / 2),
-            alpha = 0.3, color = NA) +
+            alpha = 0.2, color = NA) +
   geom_point(aes(x = median.x, y = median.y), size = 3, shape = 16) +
   facet_wrap(~ party.full, ncol = 5) +
   scale_x_continuous("", limits = c(0, 100), breaks = c(2, 96), labels = c("Levice", "Pravice")) +
@@ -194,6 +194,116 @@ g5 <- ggplot(t5, aes(group = party.full, col = is.voter, fill = is.voter)) +
   )
 
 ggsave("Graf 5 - medián, MAD, podle voličů.png", plot = g5, width = 16, height = 8, dpi = 100)
-# ggsave("Graf 5 - medián, MAD, podle voličů, menší.png", plot = g5, width = 13, height = 6.5, dpi = 85)
+ggsave("Graf 5 - medián, MAD, podle voličů, menší.png", plot = g5, width = 13, height = 6.5, dpi = 85)
 
-rm(g1, g2, g3, g4, g5)
+
+# Graf medián a Median absolute deviation, muži a ženy -----------------------------------------------
+
+t6 <- copy(d[sex != "0"])  # bez těch, kteří nevybrali pohlaví
+t6 <- t6[, .(median.x = median(as.numeric(lastX)),
+             median.y = median(as.numeric(lastY)),
+             mad.x = mad(lastX),
+             mad.y = mad(lastY)), by = c("party.full", "sex")]
+
+g8 <- ggplot(t6, aes(group = party.full, col = as.factor(sex), fill = as.factor(sex))) +
+  geom_rect(aes(xmin = median.x - mad.x / 2,
+                xmax = median.x + mad.x / 2,
+                ymin = median.y - mad.y / 2,
+                ymax = median.y + mad.y / 2),
+            alpha = 0.2, color = NA) +
+  geom_point(aes(x = median.x, y = median.y), size = 3, shape = 16) +
+  facet_wrap(~ party.full, ncol = 5) +
+  scale_x_continuous("", limits = c(0, 100), breaks = c(2, 96), labels = c("Levice", "Pravice")) +
+  scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Konzervativní", "Liberální")) +
+  scale_fill_manual("", values = c("red2","dodgerblue4"), labels = c("ženy", "muži")) +
+  scale_color_manual("", values = c("red2", "dodgerblue4"), labels = c("ženy", "muži")) +
+  ggtitle(paste0("\nPolitický kompas iDnes, medián a MAD, podle pohlaví: ", length(unique(d$iduser)), " respondentů")) +
+  theme_bw() +
+  theme(
+    axis.ticks = element_blank(),
+    legend.position = "top",
+    plot.title = element_text(size = 18, hjust = 0),
+    panel.grid = element_blank(),
+    legend.key = element_blank()
+  )
+
+ggsave("Graf 6 - medián, MAD, podle pohlaví.png", plot = g8, width = 16, height = 8, dpi = 100)
+ggsave("Graf 6 - medián, MAD, podle pohlaví, menší.png", plot = g8, width = 13, height = 6.5, dpi = 85)
+
+
+# Graf medián a Median absolute deviation, vzdělání -----------------------------------------------
+
+t7 <- copy(d[education != "0"])  # bez těch, kteří nevybrali vzdělání
+t7[, educ2 := "nižší"]
+t7[education >= 3, educ2 := "vyšší"]
+t7 <- t7[, .(median.x = median(as.numeric(lastX)),
+             median.y = median(as.numeric(lastY)),
+             mad.x = mad(lastX),
+             mad.y = mad(lastY)), by = c("party.full", "educ2")]
+
+g8 <- ggplot(t7, aes(group = party.full, col = educ2, fill = educ2)) +
+  geom_rect(aes(xmin = median.x - mad.x / 2,
+                xmax = median.x + mad.x / 2,
+                ymin = median.y - mad.y / 2,
+                ymax = median.y + mad.y / 2),
+            alpha = 0.2, color = NA) +
+  geom_point(aes(x = median.x, y = median.y), size = 3, shape = 16) +
+  facet_wrap(~ party.full, ncol = 5) +
+  scale_x_continuous("", limits = c(0, 100), breaks = c(2, 96), labels = c("Levice", "Pravice")) +
+  scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Konzervativní", "Liberální")) +
+  scale_fill_manual("", values = c("red2","dodgerblue4"), labels = c("nižší vzdělání (ZŠ, SŠ bez maturity)", "vyšší vzdělání (SŠ s maturitou, VŠ)")) +
+  scale_color_manual("", values = c("red2", "dodgerblue4"), labels = c("nižší vzdělání (ZŠ, SŠ bez maturity)", "vyšší vzdělání (SŠ s maturitou, VŠ)")) +
+  ggtitle(paste0("\nPolitický kompas iDnes, medián a MAD, podle vzdělání: ", length(unique(d$iduser)), " respondentů")) +
+  theme_bw() +
+  theme(
+    axis.ticks = element_blank(),
+    legend.position = "top",
+    plot.title = element_text(size = 18, hjust = 0),
+    panel.grid = element_blank(),
+    legend.key = element_blank()
+  )
+
+ggsave("Graf 7 - medián, MAD, podle vzdělání.png", plot = g8, width = 16, height = 8, dpi = 100)
+ggsave("Graf 7 - medián, MAD, podle vzdělání, menší.png", plot = g8, width = 13, height = 6.5, dpi = 85)
+
+
+# Graf medián a Median absolute deviation, věk -----------------------------------------------
+
+t8 <- copy(d[age != "0"])  # bez těch, kteří nevybrali věk
+t8[, age2 := "do 29 let"]
+t8[age >= 3, age2 := "30–49 let"]
+t8[age >= 5, age2 := "nad 50 let"]
+t8 <- t8[, .(median.x = median(as.numeric(lastX)),
+             median.y = median(as.numeric(lastY)),
+             mad.x = mad(lastX),
+             mad.y = mad(lastY)), by = c("party.full", "age2")]
+
+t8[, age2 := as.factor(age2)]
+t8[, age2 := factor(age2, levels = c("do 29 let", "30–49 let", "nad 50 let"))]
+
+g8 <- ggplot(t8, aes(group = party.full, col = age2, fill = age2)) +
+  geom_rect(aes(xmin = median.x - mad.x / 2,
+                xmax = median.x + mad.x / 2,
+                ymin = median.y - mad.y / 2,
+                ymax = median.y + mad.y / 2),
+            alpha = 0.2, color = NA) +
+  geom_point(aes(x = median.x, y = median.y), size = 3, shape = 16) +
+  facet_wrap(~ party.full, ncol = 5) +
+  scale_x_continuous("", limits = c(0, 100), breaks = c(2, 96), labels = c("Levice", "Pravice")) +
+  scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Konzervativní", "Liberální")) +
+  scale_fill_manual("", values = c("red2","dodgerblue4", "goldenrod1")) +
+  scale_color_manual("", values = c("red2", "dodgerblue4", "goldenrod1")) +
+  ggtitle(paste0("\nPolitický kompas iDnes, medián a MAD, podle věku: ", length(unique(d$iduser)), " respondentů")) +
+  theme_bw() +
+  theme(
+    axis.ticks = element_blank(),
+    legend.position = "top",
+    plot.title = element_text(size = 18, hjust = 0),
+    panel.grid = element_blank(),
+    legend.key = element_blank()
+  )
+
+ggsave("Graf 8 - medián, MAD, podle věku.png", plot = g8, width = 16, height = 8, dpi = 100)
+ggsave("Graf 8 - medián, MAD, podle věku, menší.png", plot = g8, width = 13, height = 6.5, dpi = 85)
+
+rm(g1, g2, g3, g4, g5, g6, g7, g8)
