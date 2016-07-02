@@ -71,7 +71,7 @@ g1 <- ggplot(d, aes(x = lastX, y = lastY, group = party, col = party)) +
   )
 
 ggsave("Graf 1 - základní.png", plot = g1, width = 16, height = 7.5, dpi = 100)
-ggsave("Graf 1 - základní, menší.png", plot = g1, width = 13, height = 5.8, dpi = 85)
+# ggsave("Graf 1 - základní, menší.png", plot = g1, width = 13, height = 5.8, dpi = 85)
 
 
 # Graf průměr a směrodatná odchylka -----------------------------------------------
@@ -102,7 +102,7 @@ g2 <- ggplot(t2, aes(group = party.full, col = party.full, fill = party.full)) +
   )
 
 ggsave("Graf 2 - průměr, standardní odchylka.png", plot = g2, width = 16, height = 7.5, dpi = 100)
-ggsave("Graf 2 - průměr, standardní odchylka, menší.png", plot = g2, width = 13, height = 5.8, dpi = 85)
+# ggsave("Graf 2 - průměr, standardní odchylka, menší.png", plot = g2, width = 13, height = 5.8, dpi = 85)
 
 
 # Graf medián a Median absolute deviation -----------------------------------------------
@@ -133,7 +133,7 @@ g3 <- ggplot(t3, aes(group = party.full, col = party.full, fill = party.full)) +
   )
 
 ggsave("Graf 3 - medián, MAD.png", plot = g3, width = 16, height = 7.5, dpi = 100)
-ggsave("Graf 3 - medián, MAD, menší.png", plot = g3, width = 13, height = 5.8, dpi = 85)
+# ggsave("Graf 3 - medián, MAD, menší.png", plot = g3, width = 13, height = 5.8, dpi = 85)
 
 
 # Společný graf medián a Median absolute deviation -----------------------------------------------
@@ -157,7 +157,7 @@ g4 <- ggplot(t3, aes(group = party.full, col = party.full, fill = party.full, la
   )
 
 ggsave("Graf 4 - medián, MAD, společný.png", plot = g4, width = 11, height = 9, dpi = 100)
-ggsave("Graf 4 - medián, MAD, společný, menší.png", plot = g4, width = 11, height = 9, dpi = 85)
+# ggsave("Graf 4 - medián, MAD, společný, menší.png", plot = g4, width = 11, height = 9, dpi = 85)
 
 
 # Graf medián a Median absolute deviation, voliči strany a ostatní -----------------------------------------------
@@ -194,7 +194,7 @@ g5 <- ggplot(t5, aes(group = party.full, col = is.voter, fill = is.voter)) +
   )
 
 ggsave("Graf 5 - medián, MAD, podle voličů.png", plot = g5, width = 16, height = 8, dpi = 100)
-ggsave("Graf 5 - medián, MAD, podle voličů, menší.png", plot = g5, width = 13, height = 6.5, dpi = 85)
+# ggsave("Graf 5 - medián, MAD, podle voličů, menší.png", plot = g5, width = 13, height = 6.5, dpi = 85)
 
 
 # Graf medián a Median absolute deviation, muži a ženy -----------------------------------------------
@@ -205,7 +205,7 @@ t6 <- t6[, .(median.x = median(as.numeric(lastX)),
              mad.x = mad(lastX),
              mad.y = mad(lastY)), by = c("party.full", "sex")]
 
-g8 <- ggplot(t6, aes(group = party.full, col = as.factor(sex), fill = as.factor(sex))) +
+g6 <- ggplot(t6, aes(group = party.full, col = as.factor(sex), fill = as.factor(sex))) +
   geom_rect(aes(xmin = median.x - mad.x / 2,
                 xmax = median.x + mad.x / 2,
                 ymin = median.y - mad.y / 2,
@@ -227,8 +227,8 @@ g8 <- ggplot(t6, aes(group = party.full, col = as.factor(sex), fill = as.factor(
     legend.key = element_blank()
   )
 
-ggsave("Graf 6 - medián, MAD, podle pohlaví.png", plot = g8, width = 16, height = 8, dpi = 100)
-ggsave("Graf 6 - medián, MAD, podle pohlaví, menší.png", plot = g8, width = 13, height = 6.5, dpi = 85)
+ggsave("Graf 6 - medián, MAD, podle pohlaví.png", plot = g6, width = 16, height = 8, dpi = 100)
+# ggsave("Graf 6 - medián, MAD, podle pohlaví, menší.png", plot = g6, width = 13, height = 6.5, dpi = 85)
 
 
 # Graf medián a Median absolute deviation, vzdělání -----------------------------------------------
@@ -241,7 +241,7 @@ t7 <- t7[, .(median.x = median(as.numeric(lastX)),
              mad.x = mad(lastX),
              mad.y = mad(lastY)), by = c("party.full", "educ2")]
 
-g8 <- ggplot(t7, aes(group = party.full, col = educ2, fill = educ2)) +
+g7 <- ggplot(t7, aes(group = party.full, col = educ2, fill = educ2)) +
   geom_rect(aes(xmin = median.x - mad.x / 2,
                 xmax = median.x + mad.x / 2,
                 ymin = median.y - mad.y / 2,
@@ -263,8 +263,8 @@ g8 <- ggplot(t7, aes(group = party.full, col = educ2, fill = educ2)) +
     legend.key = element_blank()
   )
 
-ggsave("Graf 7 - medián, MAD, podle vzdělání.png", plot = g8, width = 16, height = 8, dpi = 100)
-ggsave("Graf 7 - medián, MAD, podle vzdělání, menší.png", plot = g8, width = 13, height = 6.5, dpi = 85)
+ggsave("Graf 7 - medián, MAD, podle vzdělání.png", plot = g7, width = 16, height = 8, dpi = 100)
+# ggsave("Graf 7 - medián, MAD, podle vzdělání, menší.png", plot = g7, width = 13, height = 6.5, dpi = 85)
 
 
 # Graf medián a Median absolute deviation, věk -----------------------------------------------
@@ -304,6 +304,6 @@ g8 <- ggplot(t8, aes(group = party.full, col = age2, fill = age2)) +
   )
 
 ggsave("Graf 8 - medián, MAD, podle věku.png", plot = g8, width = 16, height = 8, dpi = 100)
-ggsave("Graf 8 - medián, MAD, podle věku, menší.png", plot = g8, width = 13, height = 6.5, dpi = 85)
+# ggsave("Graf 8 - medián, MAD, podle věku, menší.png", plot = g8, width = 13, height = 6.5, dpi = 85)
 
 rm(g1, g2, g3, g4, g5, g6, g7, g8)
