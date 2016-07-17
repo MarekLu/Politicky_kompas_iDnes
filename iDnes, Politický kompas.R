@@ -46,7 +46,13 @@ rm(temp.party2, temp.party.full2)
 d[, is.voter := FALSE]
 d[party.full == voter.full, is.voter := TRUE]
 
-# Promazání divných dat
+# Tabulka persons a promazání divných dat
+person <- copy(d)
+person <- person[party == "person"]
+person[, lastY := abs(lastY - 100)]  
+person[, firstY := abs(firstY - 100)]
+person <- person[lastX != "-1" & lastY != "-1" & firstX != "-1" & firstY != "-1"]
+
 d <- d[party != "person" & lastX != "-1" & lastY != "-1" & firstX != "-1" & firstY != "-1"]
 
 # Převrácení osy Y, aby byla stejná jako v grafu na iDnes
@@ -57,11 +63,11 @@ d[, firstY := abs(firstY - 100)]
 # Základní graf --------------------------------------------------------------------
 
 g1 <- ggplot(d, aes(x = lastX, y = lastY, group = party, col = party)) +
-  geom_jitter(alpha = 0.07, size = 1, shape = 16) +
+  geom_jitter(alpha = 0.06, size = 1, shape = 16) +
   facet_wrap(~ party.full, ncol = 5) +
   scale_x_continuous("", breaks = c(2, 96), labels = c("Levice", "Pravice")) +
   scale_y_continuous("", breaks = c(0, 100), labels = c("Konzervativní", "Liberální")) +
-  ggtitle(paste0("\nPolitický kompas iDnes: ", length(unique(d$iduser)), " respondentů")) +
+  ggtitle(paste0("\nPolitický kompas iDnes: ", formatC(length(unique(d$iduser)), big.mark = " "), " respondentů")) +
   theme_bw() +
   theme(
     axis.ticks = element_blank(),
@@ -92,7 +98,7 @@ g2 <- ggplot(t2, aes(group = party.full, col = party.full, fill = party.full)) +
   facet_wrap(~ party.full, ncol = 5) +
   scale_x_continuous("", limits = c(0, 100), breaks = c(2, 96), labels = c("Levice", "Pravice")) +
   scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Konzervativní", "Liberální")) +
-  ggtitle(paste0("\nPolitický kompas iDnes, průměr a směrodatná odchylka: ", length(unique(d$iduser)), " respondentů")) +
+  ggtitle(paste0("\nPolitický kompas iDnes, průměr a směrodatná odchylka: ", formatC(length(unique(d$iduser)), big.mark = " "), " respondentů")) +
   theme_bw() +
   theme(
     axis.ticks = element_blank(),
@@ -123,7 +129,7 @@ g3 <- ggplot(t3, aes(group = party.full, col = party.full, fill = party.full)) +
   facet_wrap(~ party.full, ncol = 5) +
   scale_x_continuous("", limits = c(0, 100), breaks = c(2, 96), labels = c("Levice", "Pravice")) +
   scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Konzervativní", "Liberální")) +
-  ggtitle(paste0("\nPolitický kompas iDnes, medián a median absolute deviation: ", length(unique(d$iduser)), " respondentů")) +
+  ggtitle(paste0("\nPolitický kompas iDnes, medián a median absolute deviation (MAD): ", formatC(length(unique(d$iduser)), big.mark = " "), " respondentů")) +
   theme_bw() +
   theme(
     axis.ticks = element_blank(),
@@ -147,7 +153,7 @@ g4 <- ggplot(t3, aes(group = party.full, col = party.full, fill = party.full, la
   geom_text(aes(x = median.x, y = median.y), fontface = "bold") +
   scale_x_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Levice", "Pravice")) +
   scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Konzervativní", "Liberální")) +
-  ggtitle(paste0("\nPolitický kompas iDnes, medián a median absolute deviation: ", length(unique(d$iduser)), " respondentů")) +
+  ggtitle(paste0("\nPolitický kompas iDnes, medián a median absolute deviation: ", formatC(length(unique(d$iduser)), big.mark = " "), " respondentů")) +
   theme_bw() +
   theme(
     axis.ticks = element_blank(),
@@ -183,7 +189,7 @@ g5 <- ggplot(t5, aes(group = party.full, col = is.voter, fill = is.voter)) +
   scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Konzervativní", "Liberální")) +
   scale_fill_manual("", values = c("red2","dodgerblue4"), labels = c("volič strany", "ostatní hlasující")) +
   scale_color_manual("", values = c("red2", "dodgerblue4"), labels = c("volič strany", "ostatní hlasující")) +
-  ggtitle(paste0("\nPolitický kompas iDnes, medián a MAD, voliči a ostatní: ", length(unique(d$iduser)), " respondentů")) +
+  ggtitle(paste0("\nPolitický kompas iDnes, medián a MAD, voliči a ostatní: ", formatC(length(unique(d$iduser)), big.mark = " "), " respondentů")) +
   theme_bw() +
   theme(
     axis.ticks = element_blank(),
@@ -217,7 +223,7 @@ g6 <- ggplot(t6, aes(group = party.full, col = as.factor(sex), fill = as.factor(
   scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Konzervativní", "Liberální")) +
   scale_fill_manual("", values = c("red2","dodgerblue4"), labels = c("ženy", "muži")) +
   scale_color_manual("", values = c("red2", "dodgerblue4"), labels = c("ženy", "muži")) +
-  ggtitle(paste0("\nPolitický kompas iDnes, medián a MAD, podle pohlaví: ", length(unique(d$iduser)), " respondentů")) +
+  ggtitle(paste0("\nPolitický kompas iDnes, medián a MAD, podle pohlaví: ", formatC(length(unique(d$iduser)), big.mark = " "), " respondentů")) +
   theme_bw() +
   theme(
     axis.ticks = element_blank(),
@@ -253,7 +259,7 @@ g7 <- ggplot(t7, aes(group = party.full, col = educ2, fill = educ2)) +
   scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Konzervativní", "Liberální")) +
   scale_fill_manual("", values = c("red2","dodgerblue4"), labels = c("nižší vzdělání (ZŠ, SŠ bez maturity)", "vyšší vzdělání (SŠ s maturitou, VŠ)")) +
   scale_color_manual("", values = c("red2", "dodgerblue4"), labels = c("nižší vzdělání (ZŠ, SŠ bez maturity)", "vyšší vzdělání (SŠ s maturitou, VŠ)")) +
-  ggtitle(paste0("\nPolitický kompas iDnes, medián a MAD, podle vzdělání: ", length(unique(d$iduser)), " respondentů")) +
+  ggtitle(paste0("\nPolitický kompas iDnes, medián a MAD, podle vzdělání: ", formatC(length(unique(d$iduser)), big.mark = " "), " respondentů")) +
   theme_bw() +
   theme(
     axis.ticks = element_blank(),
@@ -293,7 +299,7 @@ g8 <- ggplot(t8, aes(group = party.full, col = age2, fill = age2)) +
   scale_y_continuous("", limits = c(0, 100), breaks = c(0, 100), labels = c("Konzervativní", "Liberální")) +
   scale_fill_manual("", values = c("red2","dodgerblue4", "goldenrod1")) +
   scale_color_manual("", values = c("red2", "dodgerblue4", "goldenrod1")) +
-  ggtitle(paste0("\nPolitický kompas iDnes, medián a MAD, podle věku: ", length(unique(d$iduser)), " respondentů")) +
+  ggtitle(paste0("\nPolitický kompas iDnes, medián a MAD, podle věku: ", formatC(length(unique(d$iduser)), big.mark = " "), " respondentů")) +
   theme_bw() +
   theme(
     axis.ticks = element_blank(),
@@ -306,4 +312,35 @@ g8 <- ggplot(t8, aes(group = party.full, col = age2, fill = age2)) +
 ggsave("Graf 8 - medián, MAD, podle věku.png", plot = g8, width = 16, height = 8, dpi = 100)
 # ggsave("Graf 8 - medián, MAD, podle věku, menší.png", plot = g8, width = 13, height = 6.5, dpi = 85)
 
-rm(g1, g2, g3, g4, g5, g6, g7, g8)
+
+# Základní graf --------------------------------------------------------------------
+
+t9 <- copy(person)
+t9 <- t9[, .(median.x = median(as.numeric(lastX)),
+             median.y = median(as.numeric(lastY)),
+             mad.x = mad(lastX),
+             mad.y = mad(lastY))]
+
+g9 <- ggplot() +
+  geom_jitter(data = person, aes(x = lastX, y = lastY), alpha = 0.08, size = 1, shape = 16, col = "black") +
+  geom_rect(data = t9, aes(xmin = median.x - mad.x / 2,
+                xmax = median.x + mad.x / 2,
+                ymin = median.y - mad.y / 2,
+                ymax = median.y + mad.y / 2),
+            alpha = 0.2, color = NA, fill = "red") +
+  geom_point(data = t9, aes(x = median.x, y = median.y), size = 5, shape = 16, col = "red") +
+  scale_x_continuous("", breaks = c(2, 96), labels = c("Levice", "Pravice")) +
+  scale_y_continuous("", breaks = c(0, 100), labels = c("Konzervativní", "Liberální")) +
+  ggtitle(paste0("\nPolitický kompas iDnes: Kde se vidí ", formatC(length(unique(d$iduser)), big.mark = " "), " hlasujících (body, medián, MAD)")) +
+  theme_bw() +
+  theme(
+    axis.ticks = element_blank(),
+    legend.position = "none",
+    plot.title = element_text(size = 18, hjust = 0),
+    panel.grid = element_blank()
+  )
+
+ggsave("Graf 9 - pozice respondentů, body.png", plot = g9, width = 11, height = 9, dpi = 100)
+# ggsave("Graf 9 - pozice respondentů, body, menší.png", plot = g9, width = 11, height = 9, dpi = 85)
+
+rm(g1, g2, g3, g4, g5, g6, g7, g8, g9)
